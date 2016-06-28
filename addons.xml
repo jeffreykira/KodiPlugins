@@ -32,7 +32,7 @@
         </extension>
     </addon>
 
-    <addon id="script.logviewer" name="Log Viewer" provider-name="merlink" version="0.0.1">
+    <addon id="script.logviewer" name="Log Viewer" provider-name="merlink" version="0.0.2">
         <requires>
             <import addon="xbmc.python" version="2.14.0"/>
         </requires>
