@@ -8,6 +8,6 @@
         <description lang="en">Gets the list of departures from your MVG Station</description>
         <license>GNU General Public License, v2</license>
         <language/>
-        <source>https://github.com/merlink01/KodiPlugins/tree/master/script.mvg.departures</source>
+        <source>https://github.com/jeffreykira/KodiPlugins/tree/master/script.mvg.departures</source>
     </extension>
 </addon>

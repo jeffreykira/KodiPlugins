@@ -10,6 +10,6 @@
         <description lang="en">Checks the healths of zfs regularly</description>
         <license>GNU General Public License, v2</license>
         <language/>
-        <source>https://github.com/merlink01/KodiPlugins/tree/master/script.zfs.checker</source>
+        <source>https://github.com/jeffreykira/KodiPlugins/tree/master/script.zfs.checker</source>
     </extension>
 </addon>

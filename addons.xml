@@ -11,8 +11,8 @@
             <description lang="en">Checks the healths of zfs regularly</description>
             <license>GNU General Public License, v2</license>
             <language/>
-            <source>https://github.com/merlink01/KodiPlugins/tree/master/script.zfs.checker</source>
-            <datadir zip="true">https://github.com/merlink01/KodiPlugins/raw/master/releases</datadir>
+            <source>https://github.com/jeffreykira/KodiPlugins/tree/master/script.zfs.checker</source>
+            <datadir zip="true">https://github.com/jeffreykira/KodiPlugins/raw/master/releases</datadir>
         </extension>
     </addon>
 
@@ -27,8 +27,8 @@
             <description lang="en">Gets the list of departures from your MVG Station</description>
             <license>GNU General Public License, v2</license>
             <language/>
-            <source>https://github.com/merlink01/KodiPlugins/tree/master/script.mvg.departures</source>
-            <datadir zip="true">https://github.com/merlink01/KodiPlugins/raw/master/releases</datadir>
+            <source>https://github.com/jeffreykira/KodiPlugins/tree/master/script.mvg.departures</source>
+            <datadir zip="true">https://github.com/jeffreykira/KodiPlugins/raw/master/releases</datadir>
         </extension>
     </addon>
 
@@ -43,8 +43,8 @@
             <description lang="en">View the Logfile of Kodi</description>
             <license>GNU General Public License, v2</license>
             <language/>
-            <source>https://github.com/merlink01/KodiPlugins/tree/master/script.logviewer</source>
-            <datadir zip="true">https://github.com/merlink01/KodiPlugins/raw/master/releases</datadir>
+            <source>https://github.com/jeffreykira/KodiPlugins/tree/master/script.logviewer</source>
+            <datadir zip="true">https://github.com/jeffreykira/KodiPlugins/raw/master/releases</datadir>
         </extension>
     </addon>
 
@@ -56,8 +56,8 @@
             <description>Unofficial Addons from Merlink</description>
             <license>GNU General Public License, v2</license>
             <language/>
-            <source>https://github.com/merlink01/KodiPlugins/tree/master/repository.merlink.kodi-addons</source>
-            <datadir zip="true">https://github.com/merlink01/KodiPlugins/raw/master/releases</datadir>
+            <source>https://github.com/jeffreykira/KodiPlugins/tree/master/repository.merlink.kodi-addons</source>
+            <datadir zip="true">https://github.com/jeffreykira/KodiPlugins/raw/master/releases</datadir>
         </extension>
     </addon>
 </addons>

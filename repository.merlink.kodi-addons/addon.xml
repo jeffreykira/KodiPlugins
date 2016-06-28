@@ -1,10 +1,10 @@
 <?xml version="1.0" ?><addon id="repository.merlink.kodi-addons" name="Merlinks Unofficial Add-on Repository" provider-name="merlink" version="0.0.3">
     <extension name="Merlinks Unofficial Add-on Repository" point="xbmc.addon.repository">
-        <info compressed="false">https://github.com/merlink01/KodiPlugins/raw/master/addons.xml</info>
+        <info compressed="false">https://github.com/jeffreykira/KodiPlugins/raw/master/addons.xml</info>
 <!--
         <checksum>link</checksum>
 -->
-        <datadir zip="true">https://github.com/merlink01/KodiPlugins/raw/master/releases</datadir>
+        <datadir zip="true">https://github.com/jeffreykira/KodiPlugins/raw/master/releases</datadir>
 <!--
         <hashes>true</hashes>
 -->
