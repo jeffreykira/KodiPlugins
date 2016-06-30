@@ -39,6 +39,7 @@ from .compat import (
     compat_chr,
     compat_etree_fromstring,
     compat_html_entities,
+    compat_html_entities_html5,
     compat_http_client,
     compat_kwargs,
     compat_parse_qs,
@@ -75,7 +76,7 @@ def register_socks_protocols():
 compiled_regex_type = type(re.compile(''))
 
 std_headers = {
-    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20150101 Firefox/44.0 (Chrome)',
+    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:10.0) Gecko/20150101 Firefox/47.0 (Chrome)',
     'Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.7',
     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
     'Accept-Encoding': 'gzip, deflate',
@@ -105,9 +106,9 @@ KNOWN_EXTENSIONS = (
     'f4f', 'f4m', 'm3u8', 'smil')
 
 # needed for sanitizing filenames in restricted mode
-ACCENT_CHARS = dict(zip('ÂÃÄÀÁÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØŒÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöøœùúûüýþÿ',
-                        itertools.chain('AAAAAA', ['AE'], 'CEEEEIIIIDNOOOOOO', ['OE'], 'UUUUYP', ['ss'],
-                                        'aaaaaa', ['ae'], 'ceeeeiiiionoooooo', ['oe'], 'uuuuypy')))
+ACCENT_CHARS = dict(zip('ÂÃÄÀÁÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖŐØŒÙÚÛÜŰÝÞßàáâãäåæçèéêëìíîïðñòóôõöőøœùúûüűýþÿ',
+                        itertools.chain('AAAAAA', ['AE'], 'CEEEEIIIIDNOOOOOOO', ['OE'], 'UUUUUYP', ['ss'],
+                                        'aaaaaa', ['ae'], 'ceeeeiiiionooooooo', ['oe'], 'uuuuuypy')))
 
 
 def preferredencoding():
@@ -456,11 +457,18 @@ def orderedSet(iterable):
     return res
 
 
-def _htmlentity_transform(entity):
+def _htmlentity_transform(entity_with_semicolon):
     """Transforms an HTML entity to a character."""
+    entity = entity_with_semicolon[:-1]
+
     # Known non-numeric HTML entity
     if entity in compat_html_entities.name2codepoint:
         return compat_chr(compat_html_entities.name2codepoint[entity])
+
+    # TODO: HTML5 allows entities without a semicolon. For example,
+    # '&Eacuteric' should be decoded as 'Éric'.
+    if entity_with_semicolon in compat_html_entities_html5:
+        return compat_html_entities_html5[entity_with_semicolon]
 
     mobj = re.match(r'#(x[0-9a-fA-F]+|[0-9]+)', entity)
     if mobj is not None:
@@ -486,7 +494,7 @@ def unescapeHTML(s):
     assert type(s) == compat_str
 
     return re.sub(
-        r'&([^;]+);', lambda m: _htmlentity_transform(m.group(1)), s)
+        r'&([^;]+;)', lambda m: _htmlentity_transform(m.group(1)), s)
 
 
 def get_subprocess_encoding():
@@ -861,9 +869,13 @@ class YoutubeDLHandler(compat_urllib_request.HTTPHandler):
                 # As of RFC 2616 default charset is iso-8859-1 that is respected by python 3
                 if sys.version_info >= (3, 0):
                     location = location.encode('iso-8859-1').decode('utf-8')
+                else:
+                    location = location.decode('utf-8')
                 location_escaped = escape_url(location)
                 if location != location_escaped:
                     del resp.headers['Location']
+                    if sys.version_info < (3, 0):
+                        location_escaped = location_escaped.encode('utf-8')
                     resp.headers['Location'] = location_escaped
         return resp
 
@@ -1035,6 +1047,7 @@ def unified_strdate(date_str, day_first=True):
         format_expressions.extend([
             '%d-%m-%Y',
             '%d.%m.%Y',
+            '%d.%m.%y',
             '%d/%m/%Y',
             '%d/%m/%y',
             '%d/%m/%Y %H:%M:%S',
@@ -1055,7 +1068,10 @@ def unified_strdate(date_str, day_first=True):
     if upload_date is None:
         timetuple = email.utils.parsedate_tz(date_str)
         if timetuple:
-            upload_date = datetime.datetime(*timetuple[:6]).strftime('%Y%m%d')
+            try:
+                upload_date = datetime.datetime(*timetuple[:6]).strftime('%Y%m%d')
+            except ValueError:
+                pass
     if upload_date is not None:
         return compat_str(upload_date)
 
@@ -1885,6 +1901,16 @@ def dict_get(d, key_or_keys, default=None, skip_false_values=True):
     return d.get(key_or_keys, default)
 
 
+def try_get(src, getter, expected_type=None):
+    try:
+        v = getter(src)
+    except (AttributeError, KeyError, TypeError, IndexError):
+        pass
+    else:
+        if expected_type is None or isinstance(v, expected_type):
+            return v
+
+
 def encode_compat_str(string, encoding=preferredencoding(), errors='strict'):
     return string if isinstance(string, compat_str) else compat_str(string, encoding, errors)
 
@@ -1907,7 +1933,7 @@ def parse_age_limit(s):
 
 def strip_jsonp(code):
     return re.sub(
-        r'(?s)^[a-zA-Z0-9_.]+\s*\(\s*(.*)\);?\s*?(?://[^\n]*)*$', r'\1', code)
+        r'(?s)^[a-zA-Z0-9_.$]+\s*\(\s*(.*)\);?\s*?(?://[^\n]*)*$', r'\1', code)
 
 
 def js_to_json(code):
@@ -1944,7 +1970,7 @@ def js_to_json(code):
         '(?:[^'\\]*(?:\\\\|\\['"nurtbfx/\n]))*[^'\\]*'|
         /\*.*?\*/|,(?=\s*[\]}])|
         [a-zA-Z_][.a-zA-Z_0-9]*|
-        (?:0[xX][0-9a-fA-F]+|0+[0-7]+)(?:\s*:)?|
+        \b(?:0[xX][0-9a-fA-F]+|0+[0-7]+)(?:\s*:)?|
         [0-9]+(?=\s*:)
         ''', fix_kv, code)
 
@@ -2012,6 +2038,9 @@ def mimetype2ext(mt):
 
     ext = {
         'audio/mp4': 'm4a',
+        # Per RFC 3003, audio/mpeg can be .mp1, .mp2 or .mp3. Here use .mp3 as
+        # it's the most popular one
+        'audio/mpeg': 'mp3',
     }.get(mt)
     if ext is not None:
         return ext
@@ -2823,3 +2852,12 @@ def decode_packed_codes(code):
     return re.sub(
         r'\b(\w+)\b', lambda mobj: symbol_table[mobj.group(0)],
         obfucasted_code)
+
+
+def parse_m3u8_attributes(attrib):
+    info = {}
+    for (key, val) in re.findall(r'(?P<key>[A-Z0-9-]+)=(?P<val>"[^"]+"|[^",]+)(?:,|$)', attrib):
+        if val.startswith('"'):
+            val = val[1:-1]
+        info[key] = val
+    return info

@@ -78,6 +78,11 @@ def _selectVideoQuality(r, quality=None):
                 index[formats[i]['format_id']] = i
 
             keys = sorted(index.keys())
+
+            if u'18' in keys:
+                cindex = keys.index(u'18')
+                keys.insert(0, keys.pop(cindex))
+
             fallback = formats[index[keys[0]]]
             for fmt in keys:
                 fdata = formats[index[fmt]]
