@@ -48,7 +48,7 @@
         </extension>
     </addon>
 
-    <addon id="repository.merlink.kodi-addons" name="Merlinks Unofficial Add-on Repository" provider-name="merlink" version="0.0.3">
+    <addon id="repository.merlink.kodi-addons" name="Merlinks Unofficial Add-on Repository" provider-name="merlink" version="0.0.5">
         <extension name="Merlinks Unofficial Add-on Repository" point="xbmc.addon.repository"/>
         <extension point="xbmc.addon.metadata">
             <platform>all</platform>
@@ -77,6 +77,26 @@
             <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
             <language/>
             <source>https://github.com/jeffreykira/KodiPlugins/tree/master/script.oceanktv.youtube.dl</source>
+            <datadir zip="true">https://github.com/jeffreykira/KodiPlugins/raw/master/releases</datadir>
+        </extension>
+    </addon>
+
+    <addon id="script.module.youtube.dl" name="youtube-dl Control" version="16.623.2" provider-name="Rick Phillips (ruuk)">
+        <requires>
+            <import addon="xbmc.python" version="2.1.0" />
+            <import addon="script.module.addon.signals" version="0.0.1"/>
+        </requires>
+        <extension point="xbmc.python.script" library="control.py">
+            <provides>executable</provides>
+        </extension>
+        <extension point="xbmc.python.module" library="lib" />
+        <extension point="xbmc.addon.metadata">
+            <platform>all</platform>
+            <summary lang="en">Module providing access to youtube-dl video stream extraction</summary>
+            <description lang="en">Module providing access to youtube-dl video stream extraction for hundreds of sites. Version is based on youtube-dl date version: YY.MDD.V where V is the addon specific sub-version. Also provides downloading with the option for background downloading with a queue and queue manager.</description>
+            <license>GNU GENERAL PUBLIC LICENSE. Version 2, June 1991</license>
+            <language/>
+            <source>https://github.com/jeffreykira/KodiPlugins/tree/master/script.module.youtube.dl</source>
             <datadir zip="true">https://github.com/jeffreykira/KodiPlugins/raw/master/releases</datadir>
         </extension>
     </addon>
